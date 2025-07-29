@@ -32,6 +32,7 @@ export const CourierMain = () => {
         Заказ №: {order?.orderNumber}
         <div>отправитель: {order?.sender} </div>
         <div>получатель: {order?.recipient}</div>
+        <div>статус: {order?.status}</div>
       </div>
 
       <div>

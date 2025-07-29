@@ -1,4 +1,4 @@
-import { mockAddresses } from "@/lib/data/addresses";
+import { mockAddresses } from '@/lib/data/addresses';
 import { v1 } from 'uuid';
 
 export type OrderType = {
@@ -7,6 +7,7 @@ export type OrderType = {
   orderType: 'food' | 'documents' | 'products';
   sender: string;
   recipient: string;
+  status: 'собирается...' | 'готов к получению' | 'принят курьером' | 'доставлен';
 };
 
 export function getRandomAddress() {
@@ -16,7 +17,7 @@ export function getRandomAddress() {
 
 export function getRandomOrder(): OrderType {
   const sender = getRandomAddress();
-  let recipient = getRandomAddress()
+  let recipient = getRandomAddress();
 
   // Гарантируем, что получатель отличается от отправителя
   while (recipient.id === sender.id) {
@@ -28,6 +29,7 @@ export function getRandomOrder(): OrderType {
     orderNumber: Math.floor(Math.random() * 9000000) + 1000000, // Случайный 7-значный номер
     orderType: ['food', 'documents', 'products'][Math.floor(Math.random() * 3)] as OrderType['orderType'],
     sender: sender.fullAddress,
-    recipient: recipient.fullAddress
+    recipient: recipient.fullAddress,
+    status: 'собирается...',
   };
 }
