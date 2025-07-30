@@ -1,22 +1,34 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { createRandomOrder } from '@/lib/utils/createRandomOrder';
-import { Order, OrderType } from '@/types/orderTypes';
+import { Order } from '@/types/orderTypes';
 import { queueManagement } from '@/lib/utils/queueManagement';
-
-
+import { fetchNextOrder } from '@/lib/utils/fetchNextOrder';
 
 export const CourierMain = () => {
   const [order, setOrder] = useState<Order | null>(null);
-  const [disabledButtons, setDisabledButtons] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const handleReject = (rejectedOrder: Order) => {
+    setOrder(null);
+    queueManagement.markOrderAsRejected(rejectedOrder.orderNumber);
+    fetchNextOrder().then((res) => {
+      if (res === 'no') {
+        alert('НЕТ ЗАКАЗОВ ОБНОВИ СТРАНИЦУ');
+      } else {
+        setOrder(res);
+      }
+    });
+  };
 
   useEffect(() => {
-
+    fetchNextOrder().then((resul) => {
+      if (resul === 'no') {
+        alert('НЕТ ЗАКАЗОВ ОБНОВИ СТРАНИЦУ');
+      } else {
+        setOrder(resul);
+      }
+    });
   }, []);
-
 
   return (
     <div>
@@ -26,31 +38,33 @@ export const CourierMain = () => {
 
       <br />
 
-
+      {order ? (
         <div>
-          <h3>Заказ №: {'000000'}</h3>
-          <div>Тип: {'тип'}</div>
-          <div>Отправитель: {'ар, 5'}</div>
-          <div>Получатель: {'sdff,5'}</div>
-          <div>Статус: {'ksdfjks'}</div>
-          <div>Комментарий к заказу: {'ksdfjks'}</div>
+          <h3>Заказ №: {order.orderNumber}</h3>
+          <div>Тип: {order.orderType}</div>
+          <div>Отправитель: {order.sender}</div>
+          <div>Получатель: {order.recipient}</div>
+          <div>Статус: {order.statusOrder}</div>
+          <div>Комментарий к заказу: {order.comment}</div>
+
+          <div>
+            <button
+            // onClick={handleAccept}
+            // disabled={isLoading}
+            >
+              Принять заказ
+            </button>
+            <button
+              onClick={() => handleReject(order)}
+              // disabled={isLoading}
+            >
+              Отказаться
+            </button>
+          </div>
         </div>
-
-
-      <div>
-        <button
-          // onClick={handleAccept}
-          disabled={disabledButtons || isLoading}
-        >
-          Принять заказ
-        </button>
-        <button
-          // onClick={handleReject}
-          disabled={disabledButtons || isLoading}
-        >
-          Отказаться
-        </button>
-      </div>
+      ) : (
+        'поиск заказа....'
+      )}
     </div>
   );
 };

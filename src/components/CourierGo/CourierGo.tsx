@@ -8,9 +8,6 @@ import { CourierMain } from '@/components/CourierGo/CourierMain/CourierMain';
 export const CourierGo = () => {
   const [isGo, setIsGo] = useState<boolean>(false);
 
-
-
-
   return (
     <div className={styles.container}>
       {!isGo

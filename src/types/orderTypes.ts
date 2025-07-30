@@ -6,6 +6,7 @@ export type Order = {
   recipient: string;
   statusOrder: StatusOrder
   comment: string;
+  skipOrder: boolean;
 };
 
 export type Address = {

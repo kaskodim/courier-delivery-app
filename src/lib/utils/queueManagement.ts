@@ -34,11 +34,25 @@ function createManagement() {
     },
 
     /**
-     * Возвращает первый заказ в очереди без удаления
+     * Возвращает первый не отклоненный заказ в очереди без удаления
      * @returns {Order | null} Первый заказ или null, если очередь пуста
      */
     getOrder(): Order | null {
-      return orderQueue.length > 0 ? orderQueue[0] : null;
+      if (orderQueue.length > 0){
+        const filteredOrders = orderQueue.filter((order)=>!order.skipOrder)
+        return filteredOrders[0]
+      }
+      return null
+    },
+
+    /**
+     * Возвращает заказ по номеру в очереди без удаления
+     * @returns {Order | null} Заказ по номеру или null, если очередь пуста
+     */
+    getOrderByNumber (number: string): Order | null {
+      const queue = this.getOrderQueue()
+      const nextOrder = queue.find((or)=> or.orderNumber === number ) || null
+      return nextOrder;
     },
 
     /**
@@ -46,7 +60,24 @@ function createManagement() {
      */
     getQueueSize(): number {
       return orderQueue.length;
-    }
+    },
+
+
+    /**
+     * Помечает заказ как отклоненный курьером
+     * @param {string} number Номер заказа
+     * @returns {boolean} Успешность операции
+     */
+    markOrderAsRejected(number: string): boolean {
+      const order = this.getOrderByNumber(number);
+      if (order) {
+        order.skipOrder = true;
+        return true;
+      }
+      return false;
+    },
+
+
   };
 }
 
