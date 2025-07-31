@@ -26,6 +26,25 @@ function createManagement() {
     },
 
     /**
+     * Удаляет и возвращает заказ по номеру из очереди
+     * @returns {Order | undefined} Удаленный заказ или undefined, если очередь пуста
+     */
+    removeOrderByNuber(number: string) {
+
+      const order =  this.getOrderByNumber(number)
+      if (!order) return undefined;
+
+      const index = orderQueue.findIndex(order => order.orderNumber === number);
+      if (index !== -1) {
+        return orderQueue.splice(index, 1)[0];
+      }
+      return undefined;
+
+    },
+
+
+
+    /**
      * Возвращает текущее состояние очереди (копию массива)
      * @returns {Order[]} Массив заказов
      */
@@ -34,24 +53,24 @@ function createManagement() {
     },
 
     /**
-     * Возвращает первый не отклоненный заказ в очереди без удаления
+     * Возвращает первый не отклоненный и не принятый заказ в очереди без удаления
      * @returns {Order | null} Первый заказ или null, если очередь пуста
      */
     getOrder(): Order | null {
-      if (orderQueue.length > 0){
-        const filteredOrders = orderQueue.filter((order)=>!order.skipOrder)
-        return filteredOrders[0]
+      if (orderQueue.length > 0) {
+        const filteredOrders = orderQueue.filter((order) => !order.skipOrder && !order.accepted);
+        return filteredOrders[0];
       }
-      return null
+      return null;
     },
 
     /**
      * Возвращает заказ по номеру в очереди без удаления
      * @returns {Order | null} Заказ по номеру или null, если очередь пуста
      */
-    getOrderByNumber (number: string): Order | null {
-      const queue = this.getOrderQueue()
-      const nextOrder = queue.find((or)=> or.orderNumber === number ) || null
+    getOrderByNumber(number: string): Order | null {
+      const queue = this.getOrderQueue();
+      const nextOrder = queue.find((or) => or.orderNumber === number) || null;
       return nextOrder;
     },
 
@@ -62,13 +81,12 @@ function createManagement() {
       return orderQueue.length;
     },
 
-
     /**
      * Помечает заказ как отклоненный курьером
      * @param {string} number Номер заказа
      * @returns {boolean} Успешность операции
      */
-    markOrderAsRejected(number: string): boolean {
+    markOrderRejected(number: string): boolean {
       const order = this.getOrderByNumber(number);
       if (order) {
         order.skipOrder = true;
@@ -76,8 +94,6 @@ function createManagement() {
       }
       return false;
     },
-
-
   };
 }
 

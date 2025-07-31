@@ -7,6 +7,8 @@ export type Order = {
   statusOrder: StatusOrder
   comment: string;
   skipOrder: boolean;
+  accepted: boolean
+
 };
 
 export type Address = {

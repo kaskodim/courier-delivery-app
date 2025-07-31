@@ -1,70 +1,77 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import { Order } from '@/types/orderTypes';
-import { queueManagement } from '@/lib/utils/queueManagement';
-import { fetchNextOrder } from '@/lib/utils/fetchNextOrder';
+import React, { useEffect, useState } from 'react'
+import { Order } from '@/types/orderTypes'
+import { queueManagement } from '@/lib/utils/queueManagement'
+import { fetchNextOrder } from '@/lib/utils/fetchNextOrder'
+import styles from './styles.module.css'
+import { useRouter } from 'next/navigation'
+
 
 export const CourierMain = () => {
-  const [order, setOrder] = useState<Order | null>(null);
+  const [currentOrder, setCurrentOrder] = useState<Order | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const router = useRouter()
 
   const handleReject = (rejectedOrder: Order) => {
-    setOrder(null);
-    queueManagement.markOrderAsRejected(rejectedOrder.orderNumber);
-    fetchNextOrder().then((res) => {
-      if (res === 'no') {
-        alert('НЕТ ЗАКАЗОВ ОБНОВИ СТРАНИЦУ');
-      } else {
-        setOrder(res);
-      }
-    });
-  };
+    // TODO: продумать логику если все заказы будут в отказе курьером,
+    // сейчас не принятые заказы второй раз не отображаются, висят в очереди
+    setCurrentOrder(null)
+    setIsLoading(true)
+    queueManagement.markOrderRejected(rejectedOrder.orderNumber)
+    if (!currentOrder) {
+      fetchNextOrder().then((order) => {
+        setIsLoading(false)
+        setCurrentOrder(order)
+      })
+    }
+  }
+
+  const handleAccept = () => {
+    if (currentOrder) {
+      currentOrder.accepted = true
+      router.push(`/orders/${currentOrder.orderNumber}`)
+    }
+  }
 
   useEffect(() => {
-    fetchNextOrder().then((resul) => {
-      if (resul === 'no') {
-        alert('НЕТ ЗАКАЗОВ ОБНОВИ СТРАНИЦУ');
-      } else {
-        setOrder(resul);
+    const intervalId = setInterval(() => {
+      if (!currentOrder) {
+        fetchNextOrder().then((order) => {
+          setIsLoading(false)
+          setCurrentOrder(order)
+        })
       }
-    });
-  }, []);
+    }, 1000)
+
+    return () => clearInterval(intervalId)
+  }, [currentOrder])
 
   return (
-    <div>
-      <div>Карта</div>
-      <div>Время на смене</div>
+    <div className={styles.container}>
+      <div>Карта (тут будет карта)</div>
+      <div>Время на смене (тут будет время на смене)</div>
       <div>Закончить смену (где-то будет кнопка)</div>
 
       <br />
 
-      {order ? (
+      {isLoading ? (
+        <div>поиск заказа....</div>
+      ) : currentOrder ? (
         <div>
-          <h3>Заказ №: {order.orderNumber}</h3>
-          <div>Тип: {order.orderType}</div>
-          <div>Отправитель: {order.sender}</div>
-          <div>Получатель: {order.recipient}</div>
-          <div>Статус: {order.statusOrder}</div>
-          <div>Комментарий к заказу: {order.comment}</div>
+          <h3>Заказ №: {currentOrder.orderNumber}</h3>
+          <div>Тип: {currentOrder.orderType}</div>
+          <div>Отправитель: {currentOrder.sender}</div>
+          <div>Получатель: {currentOrder.recipient}</div>
+          <div>Статус: {currentOrder.statusOrder}</div>
+          <div>Комментарий к заказу: {currentOrder.comment}</div>
 
           <div>
-            <button
-            // onClick={handleAccept}
-            // disabled={isLoading}
-            >
-              Принять заказ
-            </button>
-            <button
-              onClick={() => handleReject(order)}
-              // disabled={isLoading}
-            >
-              Отказаться
-            </button>
+            <button onClick={handleAccept}>Принять заказ</button>
+            <button onClick={() => handleReject(currentOrder)}>Отказаться</button>
           </div>
         </div>
-      ) : (
-        'поиск заказа....'
-      )}
+      ) : null}
     </div>
-  );
-};
+  )
+}

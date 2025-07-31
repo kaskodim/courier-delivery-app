@@ -33,7 +33,7 @@ export function createRandomOrder(number: number): Order {
   if (!randomType || !randomComment) {
     throw new Error('Invalid data');
   }
-//TODO: ДОБАВИТЬ СОССТОЯНИЕ ЗАКАЗ В РАБОТЕ
+
   return {
     id: v1(),
     orderNumber: `${getDateNumber()}-${number}`,
@@ -42,6 +42,7 @@ export function createRandomOrder(number: number): Order {
     recipient: `улица: ${recipient.street}, дом: ${recipient.houseNumber}`,
     statusOrder: randomType === OrderType.FOOD ? StatusOrder.notReady : StatusOrder.ready,
     comment: randomComment,
-    skipOrder: false
+    skipOrder: false,
+    accepted: false
   };
 }
