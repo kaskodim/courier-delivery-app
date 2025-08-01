@@ -26,13 +26,13 @@ export const CourierMain = () => {
     }
   }
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     if (currentOrder) {
       currentOrder.accepted = true
+      // Используем push без await (так как это клиентский переход)
       router.push(`/orders/${currentOrder.orderNumber}`)
     }
   }
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (!currentOrder) {

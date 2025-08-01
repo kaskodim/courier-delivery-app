@@ -1,4 +1,4 @@
-import React from 'react'
+// app/orders/[orderNumber]/page.tsx
 import { Order } from '@/components/Order/Order'
 
 type OrderPageProps = {
@@ -7,12 +7,11 @@ type OrderPageProps = {
   }
 }
 
-const OrderPage = ({ params }: OrderPageProps) => {
+export default async function OrderPage({ params }: OrderPageProps) {
+  // В App Router с async params доступен сразу
   return (
     <div>
       <Order orderNumber={params.orderNumber} />
     </div>
   )
 }
-
-export default OrderPage
