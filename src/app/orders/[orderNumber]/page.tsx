@@ -1,18 +1,17 @@
-import React from 'react'
-import { Order } from '@/components/Order/Order'
+// app/orders/[orderNumber]/page.tsx
+import { Suspense } from 'react'
+import OrderWrapper from './OrderWrapper'
+import Loading from '@/app/orders/[orderNumber]/loading';
 
-type OrderPageProps = {
-  params: {
-    orderNumber: string
-  }
-}
 
-const OrderPage = ({ params }: OrderPageProps) => {
+export default function OrderPage({
+                                    params
+                                  }: {
+  params: { orderNumber: string }
+}) {
   return (
-    <div>
-      <Order orderNumber={params.orderNumber} />
-    </div>
+    <Suspense fallback={<Loading />}>
+      <OrderWrapper orderNumber={params.orderNumber} />
+    </Suspense>
   )
 }
-
-export default OrderPage
