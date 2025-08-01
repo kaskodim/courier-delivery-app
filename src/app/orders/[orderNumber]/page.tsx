@@ -12,7 +12,7 @@ const OrderPage = ({ params }: OrderPageProps) => {
     <div>
       <Order orderNumber={params.orderNumber} />
     </div>
-  );
-};
+  )
+}
 
-export default OrderPage;
+export default OrderPage

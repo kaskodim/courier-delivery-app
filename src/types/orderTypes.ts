@@ -1,24 +1,23 @@
 export type Order = {
-  id: string;
-  orderNumber: string;
-  orderType: OrderType;
-  sender: string;
-  recipient: string;
+  id: string
+  orderNumber: string
+  orderType: OrderCategory
+  sender: string
+  recipient: string
   statusOrder: StatusOrder
-  comment: string;
-  skipOrder: boolean;
+  comment: string
+  skipOrder: boolean
   accepted: boolean
-
-};
+}
 
 export type Address = {
-  id: string;
-  city: string;
-  street: string;
-  houseNumber: string;
-};
+  id: string
+  city: string
+  street: string
+  houseNumber: string
+}
 
-export enum OrderType {
+export enum OrderCategory {
   FOOD = 'Еда',
   DOCS = 'Документы',
   PRODUCT = 'Товар',

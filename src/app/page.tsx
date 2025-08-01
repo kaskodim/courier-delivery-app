@@ -4,8 +4,8 @@ import { CourierGo } from '@/components/CourierGo/CourierGo'
 import { Header } from '@/components/Header/Header'
 import { useEffect } from 'react'
 import { queueManagement } from '@/lib/utils/queueManagement'
-import { TemporaryAdministrator } from '@/components/TemporaryAdministrator/TemporaryAdministrator';
-import { MAX_INTERVAL, MAX_QUEUE, MIN_INTERVAL } from '@/consnants';
+import { TemporaryAdministrator } from '@/components/TemporaryAdministrator/TemporaryAdministrator'
+import { MAX_INTERVAL, MAX_QUEUE, MIN_INTERVAL } from '@/consnants'
 
 export default function Home() {
   //имитация поступления заказов в очередь
@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <TemporaryAdministrator/>
+      <TemporaryAdministrator />
       <CourierGo />
     </div>
   )

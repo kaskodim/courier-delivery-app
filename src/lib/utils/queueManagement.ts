@@ -1,9 +1,9 @@
-import { Order } from '@/types/orderTypes';
-import { createRandomOrder } from '@/lib/utils/createRandomOrder';
+import { Order } from '@/types/orderTypes'
+import { createRandomOrder } from '@/lib/utils/createRandomOrder'
 
 function createManagement() {
-  const orderQueue: Order[] = [];
-  let numOrder = 1000;
+  const orderQueue: Order[] = []
+  let numOrder = 1000
 
   return {
     /**
@@ -11,10 +11,10 @@ function createManagement() {
      * @returns {Order} Добавленный заказ
      */
     addOrder(): Order {
-      const newOrder = createRandomOrder(numOrder);
-      orderQueue.push(newOrder);
-      numOrder++;
-      return newOrder;
+      const newOrder = createRandomOrder(numOrder)
+      orderQueue.push(newOrder)
+      numOrder++
+      return newOrder
     },
 
     /**
@@ -22,7 +22,7 @@ function createManagement() {
      * @returns {Order | undefined} Удаленный заказ или undefined, если очередь пуста
      */
     removeOrder(): Order | undefined {
-      return orderQueue.shift();
+      return orderQueue.shift()
     },
 
     /**
@@ -30,26 +30,22 @@ function createManagement() {
      * @returns {Order | undefined} Удаленный заказ или undefined, если очередь пуста
      */
     removeOrderByNuber(number: string) {
+      const order = this.getOrderByNumber(number)
+      if (!order) return undefined
 
-      const order =  this.getOrderByNumber(number)
-      if (!order) return undefined;
-
-      const index = orderQueue.findIndex(order => order.orderNumber === number);
+      const index = orderQueue.findIndex((order) => order.orderNumber === number)
       if (index !== -1) {
-        return orderQueue.splice(index, 1)[0];
+        return orderQueue.splice(index, 1)[0]
       }
-      return undefined;
-
+      return undefined
     },
-
-
 
     /**
      * Возвращает текущее состояние очереди (копию массива)
      * @returns {Order[]} Массив заказов
      */
     getOrderQueue(): Order[] {
-      return [...orderQueue];
+      return [...orderQueue]
     },
 
     /**
@@ -58,10 +54,10 @@ function createManagement() {
      */
     getOrder(): Order | null {
       if (orderQueue.length > 0) {
-        const filteredOrders = orderQueue.filter((order) => !order.skipOrder && !order.accepted);
-        return filteredOrders[0];
+        const filteredOrders = orderQueue.filter((order) => !order.skipOrder && !order.accepted)
+        return filteredOrders[0]
       }
-      return null;
+      return null
     },
 
     /**
@@ -69,16 +65,16 @@ function createManagement() {
      * @returns {Order | null} Заказ по номеру или null, если очередь пуста
      */
     getOrderByNumber(number: string): Order | null {
-      const queue = this.getOrderQueue();
-      const nextOrder = queue.find((or) => or.orderNumber === number) || null;
-      return nextOrder;
+      const queue = this.getOrderQueue()
+      const nextOrder = queue.find((or) => or.orderNumber === number) || null
+      return nextOrder
     },
 
     /**
      * Возвращает количество заказов в очереди
      */
     getQueueSize(): number {
-      return orderQueue.length;
+      return orderQueue.length
     },
 
     /**
@@ -87,14 +83,14 @@ function createManagement() {
      * @returns {boolean} Успешность операции
      */
     markOrderRejected(number: string): boolean {
-      const order = this.getOrderByNumber(number);
+      const order = this.getOrderByNumber(number)
       if (order) {
-        order.skipOrder = true;
-        return true;
+        order.skipOrder = true
+        return true
       }
-      return false;
+      return false
     },
-  };
+  }
 }
 
-export const queueManagement = createManagement();
+export const queueManagement = createManagement()

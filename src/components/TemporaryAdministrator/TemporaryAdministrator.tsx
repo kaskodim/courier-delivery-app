@@ -19,7 +19,7 @@ export const TemporaryAdministrator = () => {
   useEffect(() => {
     const idIntervalAdmin = setInterval(() => {
       setQueue(queueManagement.getQueueSize())
-      if (queue === MAX_QUEUE) {
+      if (queue >= MAX_QUEUE) {
         setMaxQueue('max')
       } else {
         setMaxQueue(null)
@@ -31,6 +31,15 @@ export const TemporaryAdministrator = () => {
   return (
     <div className={styles.container}>
       <h3>Временный Администратор:</h3>
+      <h5>этого компонента здесь не будет в итоговой версии</h5>
+
+      <br />
+
+      <h4>заказы поступают в очередь автоматически</h4>
+      <h5>отказанные заказы помечаются флагом и повторно пользователю не выводятся</h5>
+
+      <br />
+
       <div className={styles.content}>
         <div className={styles.mainInfo}>
           <span> максимальная очередь заказов: {MAX_QUEUE}</span>

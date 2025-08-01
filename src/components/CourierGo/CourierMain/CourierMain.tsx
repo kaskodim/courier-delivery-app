@@ -7,7 +7,6 @@ import { fetchNextOrder } from '@/lib/utils/fetchNextOrder'
 import styles from './styles.module.css'
 import { useRouter } from 'next/navigation'
 
-
 export const CourierMain = () => {
   const [currentOrder, setCurrentOrder] = useState<Order | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -49,6 +48,10 @@ export const CourierMain = () => {
 
   return (
     <div className={styles.container}>
+      <h5>Это главный компонент. Здесь информация о поступающем заказе </h5>
+
+      <br />
+
       <div>Карта (тут будет карта)</div>
       <div>Время на смене (тут будет время на смене)</div>
       <div>Закончить смену (где-то будет кнопка)</div>

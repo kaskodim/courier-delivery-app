@@ -1,16 +1,16 @@
-import { Order } from '@/types/orderTypes';
-import { queueManagement } from '@/lib/utils/queueManagement';
+import { Order } from '@/types/orderTypes'
+import { queueManagement } from '@/lib/utils/queueManagement'
 
 export const fetchNextOrder = (): Promise<Order> =>
   new Promise((resolve, reject) => {
     setTimeout(() => {
       try {
-        const newOrder = queueManagement.getOrder();
+        const newOrder = queueManagement.getOrder()
         if (newOrder) {
-          resolve(newOrder);
+          resolve(newOrder)
         }
       } catch (error) {
-        reject(error);
+        reject(error)
       }
-    }, 1000);
-  });
+    }, 1000)
+  })

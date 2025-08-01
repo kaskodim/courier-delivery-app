@@ -1,4 +1,4 @@
-import { Address } from '@/types/orderTypes';
+import { Address } from '@/types/orderTypes'
 
 export const mockAddresses: Address[] = [
   { id: '1', city: 'Москва', street: 'Тверская улица', houseNumber: '5' },
@@ -23,4 +23,4 @@ export const mockAddresses: Address[] = [
   { id: '20', city: 'Москва', street: 'Большая Полянка', houseNumber: '16' },
   { id: '21', city: 'Тамбов', street: 'Советская', houseNumber: '9' },
   { id: '22', city: 'Тамбов', street: 'Интернациональная', houseNumber: '16' },
-];
+]

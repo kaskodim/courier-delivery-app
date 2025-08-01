@@ -12,15 +12,7 @@ type OrderProps = {
 
 export const Order = ({ orderNumber }: OrderProps) => {
   const [order, setOrder] = useState<OrderType | null>(null)
-
   const router = useRouter()
-
-  useEffect(() => {
-    if (orderNumber) {
-      const foundOrder = queueManagement.getOrderByNumber(orderNumber)
-      setOrder(foundOrder)
-    }
-  }, [orderNumber])
 
   const handlerBack = () => {
     router.push('/')
@@ -32,6 +24,13 @@ export const Order = ({ orderNumber }: OrderProps) => {
     }
     router.push('/')
   }
+
+  useEffect(() => {
+    if (orderNumber) {
+      const foundOrder = queueManagement.getOrderByNumber(orderNumber)
+      setOrder(foundOrder)
+    }
+  }, [orderNumber])
 
   if (!order) {
     return (
