@@ -1,17 +1,17 @@
 // app/orders/[orderNumber]/page.tsx
-import { Order } from '@/components/Order/Order'
+import { Suspense } from 'react'
+import OrderWrapper from './OrderWrapper'
+import Loading from '@/app/orders/[orderNumber]/loading';
 
-type OrderPageProps = {
-  params: {
-    orderNumber: string
-  }
-}
 
-export default async function OrderPage({ params }: OrderPageProps) {
-  // В App Router с async params доступен сразу
+export default function OrderPage({
+                                    params
+                                  }: {
+  params: { orderNumber: string }
+}) {
   return (
-    <div>
-      <Order orderNumber={params.orderNumber} />
-    </div>
+    <Suspense fallback={<Loading />}>
+      <OrderWrapper orderNumber={params.orderNumber} />
+    </Suspense>
   )
 }
