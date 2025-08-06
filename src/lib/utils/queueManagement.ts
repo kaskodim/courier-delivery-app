@@ -66,8 +66,7 @@ function createManagement() {
      */
     getOrderByNumber(number: string): Order | null {
       const queue = this.getOrderQueue()
-      const nextOrder = queue.find((or) => or.orderNumber === number) || null
-      return nextOrder
+      return queue.find((or) => or.orderNumber === number) || null
     },
 
     /**
