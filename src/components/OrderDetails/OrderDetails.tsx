@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react'
 import { Order as OrderType } from '@/types/orderTypes'
 import { queueManagement } from '@/lib/utils/queueManagement'
 import { useRouter } from 'next/navigation'
-import styles from './styles.module.css'
+import styles from './OrderDetails.module.css'
 
 type OrderProps = {
   orderNumber: string
 }
 
-export const Order = ({ orderNumber }: OrderProps) => {
+export const OrderDetails = ({ orderNumber }: OrderProps) => {
   const [order, setOrder] = useState<OrderType | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
@@ -19,21 +19,17 @@ export const Order = ({ orderNumber }: OrderProps) => {
 
   const handlerComplete = () => {
     if (order) {
-      queueManagement.removeOrderByNuber(order.orderNumber)
+      queueManagement.removeOrderByNumber(order.orderNumber)
+      router.push('/?confirmed=true')
     }
-    router.push('/')
   }
 
   useEffect(() => {
     setIsLoading(true)
     // Добавляем небольшую задержку для симуляции загрузки
-    const timer = setTimeout(() => {
-      const foundOrder = queueManagement.getOrderByNumber(orderNumber)
-      setOrder(foundOrder)
-      setIsLoading(false)
-    }, 200)
-
-    return () => clearTimeout(timer)
+    const foundOrder = queueManagement.getOrderByNumber(orderNumber)
+    setOrder(foundOrder)
+    setIsLoading(false)
   }, [orderNumber])
 
   if (isLoading) {

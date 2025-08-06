@@ -29,7 +29,7 @@ function createManagement() {
      * Удаляет и возвращает заказ по номеру из очереди
      * @returns {Order | undefined} Удаленный заказ или undefined, если очередь пуста
      */
-    removeOrderByNuber(number: string) {
+    removeOrderByNumber(number: string) {
       const order = this.getOrderByNumber(number)
       if (!order) return undefined
 

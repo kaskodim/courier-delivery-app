@@ -1,17 +1,12 @@
-// app/orders/[orderNumber]/page.tsx
 import { Suspense } from 'react'
 import OrderWrapper from './OrderWrapper'
-import Loading from '@/app/orders/[orderNumber]/loading';
+import Loading from '@/app/orders/[orderNumber]/loading'
 
-
-export default function OrderPage({
-                                    params
-                                  }: {
-  params: { orderNumber: string }
-}) {
+export default async function OrderPage({ params }: { params: Promise<{ orderNumber: string }> }) {
+  const { orderNumber } = await params // Разрешаем Promise
   return (
     <Suspense fallback={<Loading />}>
-      <OrderWrapper orderNumber={params.orderNumber} />
+      <OrderWrapper orderNumber={orderNumber} />
     </Suspense>
   )
 }

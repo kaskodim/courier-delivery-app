@@ -4,7 +4,7 @@ export type Order = {
   orderType: OrderCategory
   sender: string
   recipient: string
-  statusOrder: StatusOrder
+  statusOrder: OrderStatus
   comment: string
   skipOrder: boolean
   accepted: boolean
@@ -23,7 +23,7 @@ export enum OrderCategory {
   PRODUCT = 'Товар',
 }
 
-export enum StatusOrder {
+export enum OrderStatus {
   notReady = 'собирается...',
   ready = 'готов к получению',
   accepted = 'принят курьером',

@@ -1,5 +1,5 @@
 import { mockAddresses } from '@/lib/data/addresses'
-import { Address, Order, OrderCategory, StatusOrder } from '@/types/orderTypes'
+import { Address, Order, OrderCategory, OrderStatus } from '@/types/orderTypes'
 import { v1 } from 'uuid'
 import { courierComments } from '@/lib/data/courierComments'
 
@@ -40,7 +40,7 @@ export function createRandomOrder(number: number): Order {
     orderType: randomType,
     sender: `улица: ${sender.street}, дом: ${sender.houseNumber}`,
     recipient: `улица: ${recipient.street}, дом: ${recipient.houseNumber}`,
-    statusOrder: randomType === OrderCategory.FOOD ? StatusOrder.notReady : StatusOrder.ready,
+    statusOrder: randomType === OrderCategory.FOOD ? OrderStatus.notReady : OrderStatus.ready,
     comment: randomComment,
     skipOrder: false,
     accepted: false,
