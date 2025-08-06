@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { queueManagement } from '@/lib/utils/queueManagement'
 import { MAX_QUEUE } from '@/consnants'
-import styles from './styles.module.css'
+import styles from './TemporaryAdministrator.module.css'
 
 export const TemporaryAdministrator = () => {
   const [queue, setQueue] = useState(0)

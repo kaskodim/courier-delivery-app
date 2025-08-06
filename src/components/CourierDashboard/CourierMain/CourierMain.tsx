@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Order } from '@/types/orderTypes'
 import { queueManagement } from '@/lib/utils/queueManagement'
 import { fetchNextOrder } from '@/lib/utils/fetchNextOrder'
-import styles from './styles.module.css'
+import styles from './CourierMain.module.css'
 import { useRouter } from 'next/navigation'
 
 export const CourierMain = () => {
