@@ -7,4 +7,5 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error('Отсутствуют переменные Supabase env!');
 }
 
+
 export const supabase = createClient(supabaseUrl, supabaseKey)
