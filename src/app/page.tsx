@@ -11,29 +11,26 @@ import { supabase } from '@lib/supabase/supabase-client'
 import { Session } from '@supabase/auth-js'
 import Auth from '@components/Auth/Auth'
 
-
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null)
 
   const fetchSession = async () => {
     const currentSession = await supabase.auth.getSession()
-    console.log(currentSession)
     setSession(currentSession.data.session)
   }
 
+  //
   useEffect(() => {
     fetchSession()
-
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
-
     return () => {
       authListener.subscription.unsubscribe()
     }
   }, [])
 
-  //имитация поступления заказов в очередь
+  //имитация поступления заказов в очередь - временное решение
   useEffect(() => {
     let idInterval: NodeJS.Timeout
     const addOrderWithRandomInterval = () => {
@@ -49,7 +46,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div style={{width:'900px' }}>
+    <div style={{ width: '900px' }}>
       {session ? (
         <>
           <Header />
@@ -59,12 +56,8 @@ export default function Home() {
           </Suspense>
         </>
       ) : (
-
         <Auth />
       )}
     </div>
   )
 }
-
-
-
