@@ -1,12 +1,6 @@
-
 import Link from 'next/link'
 
 export default function AuthPage() {
-
-
-
-
-
   return (
     <div>
       <h1>Авторизация</h1>

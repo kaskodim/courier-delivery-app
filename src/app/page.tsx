@@ -8,29 +8,27 @@ import { TemporaryAdministrator } from '@/components/TemporaryAdministrator/Temp
 import { MAX_INTERVAL, MAX_QUEUE, MIN_INTERVAL } from '@/consnants'
 import { supabase } from '@lib/supabase/supabase-client'
 import AuthPage from '@/app/auth/page'
+import { Session } from '@supabase/auth-js'
 
 export default function Home() {
-  const [session, setSession] = useState<any>(null)
-
-  console.log('helllp')
+  const [session, setSession] = useState<Session | null>(null)
 
   const fetchSession = async () => {
     const currentSession = await supabase.auth.getSession()
+    console.log(currentSession)
     setSession(currentSession.data.session)
   }
 
   useEffect(() => {
     fetchSession()
 
-    const {data: authListener} = supabase.auth.onAuthStateChange((_event, session)=>{
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
 
-    return ()=>{
+    return () => {
       authListener.subscription.unsubscribe()
     }
-
-
   }, [])
 
   //имитация поступления заказов в очередь

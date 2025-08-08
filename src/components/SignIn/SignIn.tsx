@@ -11,7 +11,6 @@ export default function SignIn() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
 
-
   const router = useRouter()
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -22,9 +21,6 @@ export default function SignIn() {
     if (singInError) {
       console.error('ошибка при входе:', singInError.message)
       return
-
-
-
     }
     router.push('/')
   }

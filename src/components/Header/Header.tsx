@@ -3,13 +3,12 @@ import styles from './Header.module.css'
 import { supabase } from '@lib/supabase/supabase-client'
 import { useRouter } from 'next/navigation'
 
-export const Header = () => {
 
+export const Header = () => {
   const router = useRouter()
 
-
-  const hendleOut = async () => {
-   await supabase.auth.signOut()
+  const handleOut = async () => {
+    await supabase.auth.signOut()
     router.push('/auth')
   }
 
@@ -17,7 +16,7 @@ export const Header = () => {
     <>
       <div className={styles.header}>
         фамилия имя
-        <button onClick={hendleOut}>выйти</button>
+        <button onClick={handleOut}>выйти</button>
       </div>
     </>
   )
