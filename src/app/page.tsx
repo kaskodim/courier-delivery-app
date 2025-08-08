@@ -7,8 +7,10 @@ import { queueManagement } from '@/lib/utils/queueManagement'
 import { TemporaryAdministrator } from '@/components/TemporaryAdministrator/TemporaryAdministrator'
 import { MAX_INTERVAL, MAX_QUEUE, MIN_INTERVAL } from '@/consnants'
 import { supabase } from '@lib/supabase/supabase-client'
-import AuthPage from '@/app/auth/page'
+
 import { Session } from '@supabase/auth-js'
+import Auth from '@components/Auth/Auth'
+
 
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null)
@@ -47,7 +49,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div>
+    <div style={{width:'900px' }}>
       {session ? (
         <>
           <Header />
@@ -57,8 +59,12 @@ export default function Home() {
           </Suspense>
         </>
       ) : (
-        <AuthPage />
+
+        <Auth />
       )}
     </div>
   )
 }
+
+
+

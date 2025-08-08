@@ -17,3 +17,12 @@ body {
     justify-content: center;
 
 }
+
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-color: #f9fafb;
+    --border-color: #e5e7eb;
+    --error-text: #dc2626;
+    --error-bg: #fef2f2;
+}

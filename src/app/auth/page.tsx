@@ -1,12 +1,5 @@
-import Link from 'next/link'
+import Auth from '@/components/Auth/Auth'
 
 export default function AuthPage() {
-  return (
-    <div>
-      <h1>Авторизация</h1>
-      <p>
-        <Link href="/auth/signin">Войти</Link> | <Link href="/auth/signup">Зарегистрироваться</Link>
-      </p>
-    </div>
-  )
+  return <Auth />
 }
