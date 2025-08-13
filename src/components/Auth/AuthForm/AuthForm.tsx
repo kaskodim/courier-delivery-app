@@ -16,6 +16,48 @@ type Props = {
   setIsSignIn: (value: boolean) => void
 }
 
+function NameField({
+  name,
+  setName,
+}: {
+  name: string
+  setName: (value: string) => void
+}) {
+  return (
+    <div className={styles.field}>
+      <label className={styles.label}>Имя:</label>
+      <input
+        className={styles.input}
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+    </div>
+  )
+}
+
+function ConfirmPasswordField({
+  confirmPassword,
+  setConfirmPassword,
+}: {
+  confirmPassword: string
+  setConfirmPassword: (value: string) => void
+}) {
+  return (
+    <div className={styles.field}>
+      <label className={styles.label}>Повторите пароль:</label>
+      <input
+        className={styles.input}
+        type="password"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        required
+      />
+    </div>
+  )
+}
+
 export function AuthForm({
   isSignIn,
   email,
@@ -31,13 +73,17 @@ export function AuthForm({
   setIsSignIn,
 }: Props) {
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit}
+    >
       {!isSignIn && (
-        <div className={styles.field}>
-          <label className={styles.label}>Имя:</label>
-          <input className={styles.input} type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-        </div>
+        <NameField
+          name={name}
+          setName={setName}
+        />
       )}
+
       <div className={styles.field}>
         <label className={styles.label}>Email:</label>
         <input
@@ -48,6 +94,7 @@ export function AuthForm({
           required
         />
       </div>
+
       <div className={styles.field}>
         <label className={styles.label}>Пароль:</label>
         <input
@@ -58,23 +105,28 @@ export function AuthForm({
           required
         />
       </div>
+
       {!isSignIn && (
-        <div className={styles.field}>
-          <label className={styles.label}>Повторите пароль:</label>
-          <input
-            className={styles.input}
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
+        <ConfirmPasswordField
+          confirmPassword={confirmPassword}
+          setConfirmPassword={setConfirmPassword}
+        />
       )}
+
       {error && <p className={styles.error}>{error}</p>}
-      <button className={styles.button} type="submit">
+
+      <button
+        className={styles.button}
+        type="submit"
+      >
         {isSignIn ? 'Войти' : 'Зарегистрироваться'}
       </button>
-      <button type="button" onClick={() => setIsSignIn(!isSignIn)} className={styles.toggleButton}>
+
+      <button
+        type="button"
+        onClick={() => setIsSignIn(!isSignIn)}
+        className={styles.toggleButton}
+      >
         {isSignIn ? 'Регистрация' : 'Вход'}
       </button>
     </form>
