@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.53.1",
     "next": "15.4.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -22,6 +23,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.4",
     "eslint-plugin-import": "^2.32.0",
+    "prettier": "^3.6.2",
     "typescript": "^5"
   }
 }
