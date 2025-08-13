@@ -1,5 +1,5 @@
 'use client'
-
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { CourierDashboard } from '@/components/CourierDashboard/CourierDashboard'
 import { Header } from '@/components/Header/Header'
 import { Suspense, useEffect, useState } from 'react'
@@ -7,7 +7,7 @@ import { queueManagement } from '@/lib/utils/queueManagement'
 import { TemporaryAdministrator } from '@/components/TemporaryAdministrator/TemporaryAdministrator'
 import { MAX_INTERVAL, MAX_QUEUE, MIN_INTERVAL } from '@/consnants'
 import { supabase } from '@lib/supabase/supabase-client'
-
+import { PrimeReactProvider } from 'primereact/api';
 import { Session } from '@supabase/auth-js'
 import Auth from '@components/Auth/Auth'
 
@@ -46,6 +46,7 @@ export default function Home() {
   }, [])
 
   return (
+    <PrimeReactProvider>
     <div style={{ width: '900px' }}>
       {session ? (
         <>
@@ -59,5 +60,6 @@ export default function Home() {
         <Auth />
       )}
     </div>
+    </PrimeReactProvider>
   )
 }
