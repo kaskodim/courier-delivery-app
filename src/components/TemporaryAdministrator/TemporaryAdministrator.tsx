@@ -1,12 +1,10 @@
 'use client'
 
-
-
 import React, { useEffect, useState } from 'react'
 import { queueManagement } from '@/lib/utils/queueManagement'
 import { MAX_QUEUE } from '@/consnants'
 import styles from './TemporaryAdministrator.module.css'
-import { Button } from 'primereact/button';
+
 export const TemporaryAdministrator = () => {
   const [queue, setQueue] = useState(0)
   const [maxQueue, setMaxQueue] = useState<'max' | null>(null)
@@ -37,10 +35,15 @@ export const TemporaryAdministrator = () => {
 
       <br />
 
-      <h4>заказы поступают в очередь автоматически</h4>
-      <h5>отказанные заказы помечаются флагом и повторно пользователю не выводятся</h5>
+      <h4>
+        заказы поступают в очередь автоматически
+      </h4>
+      <h5>
+        отказанные заказы помечаются флагом и повторно пользователю не выводятся
+      </h5>
 
       <br />
+
 
       <div className={styles.content}>
         <div className={styles.mainInfo}>
@@ -54,7 +57,6 @@ export const TemporaryAdministrator = () => {
           <button onClick={addHandler}>добавить в очередь</button>
           <button onClick={removeHandler}>удалить из очереди</button>
         </div>
-        <Button label="Submit"></Button>
       </div>
     </div>
   )
