@@ -11,5 +11,9 @@ export const CourierDashboard = () => {
   const confirmed = searchParams.get('confirmed') === 'true'
   const [isGo, setIsGo] = useState<boolean>(!confirmed)
 
-  return <div className={styles.container}>{isGo ? <CourierStart setIsGo={setIsGo} /> : <CourierMain />}</div>
+  return (
+    <div className={styles.container}>
+      {isGo ? <CourierStart setIsGo={setIsGo} /> : <CourierMain />}
+    </div>
+  )
 }

@@ -1,30 +1,43 @@
 'use client'
-import "primereact/resources/themes/lara-light-cyan/theme.css";
+
+import 'primereact/resources/themes/lara-light-cyan/theme.css'
 import { CourierDashboard } from '@/components/CourierDashboard/CourierDashboard'
-import { Header } from '@/components/Header/Header'
 import { Suspense, useEffect, useState } from 'react'
 import { queueManagement } from '@/lib/utils/queueManagement'
-import { TemporaryAdministrator } from '@/components/TemporaryAdministrator/TemporaryAdministrator'
 import { MAX_INTERVAL, MAX_QUEUE, MIN_INTERVAL } from '@/consnants'
 import { supabase } from '@lib/supabase/supabase-client'
-import { PrimeReactProvider } from 'primereact/api';
+import { PrimeReactProvider } from 'primereact/api'
 import { Session } from '@supabase/auth-js'
 import Auth from '@components/Auth/Auth'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null)
+  const [userRole, setUserRole] = useState<'admin' | 'courier'>('admin')
+  const router = useRouter()
 
   const fetchSession = async () => {
     const currentSession = await supabase.auth.getSession()
     setSession(currentSession.data.session)
   }
 
+  useEffect(() => {
+    if (userRole === 'admin') {
+      router.push('/admin')
+    }
+    if (userRole === 'courier') {
+      router.push('/')
+    }
+  }, [userRole, router])
+
   //
   useEffect(() => {
     fetchSession()
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session)
+      },
+    )
     return () => {
       authListener.subscription.unsubscribe()
     }
@@ -37,7 +50,9 @@ export default function Home() {
       if (queueManagement.getQueueSize() < MAX_QUEUE) {
         queueManagement.addOrder()
       }
-      const randomInterval = Math.floor(Math.random() * (MAX_INTERVAL - MIN_INTERVAL + 1)) + MIN_INTERVAL
+      const randomInterval =
+        Math.floor(Math.random() * (MAX_INTERVAL - MIN_INTERVAL + 1)) +
+        MIN_INTERVAL
       clearInterval(idInterval)
       idInterval = setInterval(addOrderWithRandomInterval, randomInterval)
     }
@@ -47,19 +62,17 @@ export default function Home() {
 
   return (
     <PrimeReactProvider>
-    <div style={{ width: '900px' }}>
-      {session ? (
-        <>
-          <Header />
-          <TemporaryAdministrator />
-          <Suspense fallback={<div>Загрузка курьера...</div>}>
-            <CourierDashboard />
-          </Suspense>
-        </>
-      ) : (
-        <Auth />
-      )}
-    </div>
+      <div style={{ width: '900px' }}>
+        {session ? (
+          <>
+            <Suspense fallback={<div>Загрузка курьера...</div>}>
+              <CourierDashboard />
+            </Suspense>
+          </>
+        ) : (
+          <Auth />
+        )}
+      </div>
     </PrimeReactProvider>
   )
 }

@@ -1,5 +1,9 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
+import 'primereact/resources/themes/lara-light-indigo/theme.css'
+import 'primereact/resources/primereact.min.css'
+import 'primeicons/primeicons.css'
+import { Header } from '@components/Header/Header'
 
 export const metadata: Metadata = {
   title: 'Courier delivery app',
@@ -13,7 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body>{children}
+    <body className="flex flex-col min-h-screen">
+    <Header />
+    <main className="flex-1 p-4">{children}</main>
     </body>
     </html>
   )

@@ -8,6 +8,7 @@ export type Order = {
   comment: string
   skipOrder: boolean
   accepted: boolean
+  user_id: string | null // Добавляем, если нужно
 }
 
 export type Address = {

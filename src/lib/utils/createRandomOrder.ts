@@ -15,7 +15,7 @@ function getDateNumber(date = new Date()): string {
   return `${year}${month}${day}`
 }
 
-function getRandomItem<T>(array: T[]): T | null {
+export function getRandomItem<T>(array: T[]): T | null {
   if (!array || array.length === 0) return null
   return array[Math.floor(Math.random() * array.length)]
 }
@@ -27,7 +27,7 @@ export function createRandomOrder(number: number): Order {
     recipient = getRandomOAddress()
   }
 
-  const randomType = getRandomItem(Object.values(OrderCategory))
+ const randomType = getRandomItem(Object.values(OrderCategory))
   const randomComment = getRandomItem(courierComments)
 
   if (!randomType || !randomComment) {

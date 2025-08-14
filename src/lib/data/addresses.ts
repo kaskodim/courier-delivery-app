@@ -21,6 +21,6 @@ export const mockAddresses: Address[] = [
   { id: '18', city: 'Москва', street: 'Улица Солянка', houseNumber: '22' },
   { id: '19', city: 'Москва', street: 'Ордынка', houseNumber: '9' },
   { id: '20', city: 'Москва', street: 'Большая Полянка', houseNumber: '16' },
-  { id: '21', city: 'Тамбов', street: 'Советская', houseNumber: '9' },
-  { id: '22', city: 'Тамбов', street: 'Интернациональная', houseNumber: '16' },
+  { id: '21', city: 'Москва', street: 'Советская', houseNumber: '9' },
+  { id: '22', city: 'Москва', street: 'Интернациональная', houseNumber: '16' },
 ]
