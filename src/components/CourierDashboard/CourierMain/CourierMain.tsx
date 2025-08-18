@@ -66,7 +66,7 @@ export const CourierMain = () => {
           <div>Тип: {currentOrder.orderType}</div>
           <div>Отправитель: {currentOrder.sender}</div>
           <div>Получатель: {currentOrder.recipient}</div>
-          <div>Статус: {currentOrder.statusOrder}</div>
+          <div>Статус: {currentOrder.orderStatus}</div>
           <div>Комментарий к заказу: {currentOrder.comment}</div>
 
           <div>

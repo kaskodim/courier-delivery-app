@@ -4,11 +4,11 @@ export type Order = {
   orderType: OrderCategory
   sender: string
   recipient: string
-  statusOrder: OrderStatus
+  orderStatus: OrderStatus
   comment: string
-  skipOrder: boolean
   accepted: boolean
-  user_id: string | null // Добавляем, если нужно
+  userId: string | null
+  courierId: string | null
 }
 
 export type Address = {

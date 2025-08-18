@@ -40,9 +40,10 @@ export function createRandomOrder(number: number): Order {
     orderType: randomType,
     sender: `улица: ${sender.street}, дом: ${sender.houseNumber}`,
     recipient: `улица: ${recipient.street}, дом: ${recipient.houseNumber}`,
-    statusOrder: randomType === OrderCategory.FOOD ? OrderStatus.notReady : OrderStatus.ready,
+    orderStatus: randomType === OrderCategory.FOOD ? OrderStatus.notReady : OrderStatus.ready,
     comment: randomComment,
     skipOrder: false,
     accepted: false,
+    userId: null,
   }
 }
