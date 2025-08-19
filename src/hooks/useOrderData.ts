@@ -8,39 +8,66 @@ export const useOrderData = () => {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
+  const fetchOrders = async () => {
     setLoading(true)
-    supabase
-      .from('orders')
-      .select('*')
-      .then(({ data, error }) => {
-        if (error) console.error('Ошибка:', error)
-        else setOrders(data || [])
-        setLoading(false)
+    const { data, error } = await supabase.from('orders').select('*')
+    if (error) {
+      console.error('Ошибка при загрузке заказов:', error.message)
+    } else {
+      setOrders(data || [])
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchOrders()
+
+    const setupSubscription = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session || !session.access_token) {
+        console.error('Нет активной сессии или токена авторизации')
+        return
+      }
+
+      const channel = supabase.channel('custom-orders-channel-' + Date.now(), {
+        config: {
+          broadcast: { ack: true },
+          presence: { key: session.access_token },
+        },
       })
+      channel
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (_payload) => {
+          fetchOrders()
+        })
+        .subscribe((status) => {
+          if (status === 'CHANNEL_ERROR') {
+            console.error('Ошибка подписки:', 'Проверьте RLS, сеть или авторизацию')
+          }
+        })
+      return () => {
+        channel.unsubscribe()
+      }
+    }
+
+    setupSubscription().catch((err) => console.error('Ошибка настройки подписки:', err))
   }, [])
 
-  const addOrder = async (newOrder: Omit<Order, 'id'>) => {
-    // Получаем текущего пользователя
+  const addOrder = async (newOrder: Omit<Order, 'id' | 'orderNumber'>) => {
+    // 'id' и 'orderNumber' создаются автоматически на Supabase
     const {
       data: { user },
     } = await supabase.auth.getUser()
+    if (!user) throw new Error('Пользователь не авторизован')
 
-    if (!user) {
-      throw new Error('Пользователь не авторизован')
-    }
-
-    // Добавляем userId к заказу
     const orderWithUser = {
       ...newOrder,
-      userId: user.id, // Используем реальный UUID пользователя
+      userId: user.id,
     }
 
-    const { data, error } = await supabase
-      .from('orders')
-      .insert(orderWithUser)
-      .select()
-
+    const { data, error } = await supabase.from('orders').insert(orderWithUser).select()
     if (error) throw error
 
     setOrders((prev) => [...prev, data[0]])
@@ -49,7 +76,7 @@ export const useOrderData = () => {
 
   const deleteOrder = async (id: string) => {
     const { error } = await supabase.from('orders').delete().eq('id', id)
-    if (error) console.error('Ошибка:', error)
+    if (error) console.error('Ошибка при удалении заказа:', error.message)
     else setOrders((prev) => prev.filter((order) => order.id !== id))
   }
 
@@ -59,38 +86,9 @@ export const useOrderData = () => {
       .update(updatedFields)
       .eq('id', id)
       .select()
-    if (error) console.error('Ошибка:', error)
-    else
-      setOrders((prev) =>
-        prev.map((order) => (order.id === id ? data[0] : order)),
-      )
+    if (error) console.error('Ошибка при обновлении заказа:', error.message)
+    else setOrders((prev) => prev.map((order) => (order.id === id ? data[0] : order)))
   }
 
   return { orders, loading, addOrder, deleteOrder, updateOrder, setOrders }
 }
-
-
-// 'use client'
-//
-// import { useEffect, useState } from 'react'
-// import { Order } from '@/types/orderTypes'
-// import { supabase } from '@lib/supabase/supabase-client'
-//
-// export const useOrderData = () => {
-//   const [orders, setOrders] = useState<Order[]>([])
-//   const [loading, setLoading] = useState(false)
-//
-//   useEffect(() => {
-//     setLoading(true)
-//     supabase
-//       .from('orders')
-//       .select('*')
-//       .then(({ data, error }) => {
-//         if (error) console.error('Ошибка:', error)
-//         else setOrders(data || [])
-//         setLoading(false)
-//       })
-//   }, []) // Запускается один раз при монтировании
-//
-//   return { orders, loading, setOrders } // Добавляем setOrders для обновления извне
-// }

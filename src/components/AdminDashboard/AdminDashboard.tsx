@@ -2,10 +2,8 @@
 
 import React from 'react'
 import { useOrderData } from '@/hooks/useOrderData'
-import OrderTable from '@components/AdminDashboard/OrderTable/OrderTable'
-
-import BasicTable from '@components/AdminDashboard/OrderTable/Table'
 import GroupButtons from '@components/AdminDashboard/GroupButtons/GroupButtons'
+import OrderTable from '@components/AdminDashboard/OrderTable/OrderTable'
 
 export default function AdminDashboard() {
   const { orders, loading } = useOrderData()
@@ -17,21 +15,10 @@ export default function AdminDashboard() {
         <GroupButtons />
       </div>
 
-      <BasicTable
+      <OrderTable
         orders={orders}
         loading={loading}
       />
-
-
-
-
-
-
-
-      {/*<OrderTable*/}
-      {/*  orders={orders}*/}
-      {/*  loading={loading}*/}
-      {/*/>*/}
     </div>
   )
 }
