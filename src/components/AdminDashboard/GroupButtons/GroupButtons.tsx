@@ -7,7 +7,7 @@ import Button from '@mui/material/Button'
 export default function GroupButtons() {
   const { addOrder } = useOrderData()
 
-  const handleAddOrder = async () => {
+  const handleTestAddOrder = async () => {
     try {
       // Тестовые данные заказа
       const testOrder = {
@@ -16,7 +16,7 @@ export default function GroupButtons() {
         recipient: 'Тестовый получатель',
         orderStatus: OrderStatus.notReady,
         comment: 'Тестовый заказ',
-        accepted: true,
+        accepted: false,
         userId: '', // Заполнится автоматически если есть RLS политика
         courierId: null,
 
@@ -31,10 +31,10 @@ export default function GroupButtons() {
 
   return (
     <div className={'flex gap-2'}>
-      <Button variant="contained" onClick={handleAddOrder} size="small">
+      <Button variant="contained"  size="small">
         создать заказ
       </Button>
-      <Button variant="contained" size="small">создать рандомный заказ</Button>
+      <Button variant="contained" size="small" onClick={handleTestAddOrder}>создать тестовый заказ</Button>
       <Button variant="contained" size="small">обновить таблицу</Button>
     </div>
   )

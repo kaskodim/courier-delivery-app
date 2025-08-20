@@ -9,7 +9,7 @@ export default function AdminDashboard() {
   const { orders, loading } = useOrderData()
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4 p-4 flex-1"> {/* CHANGE: Added flex-1 to make the entire dashboard fill the main */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">Управление заказами</h2>
         <GroupButtons />

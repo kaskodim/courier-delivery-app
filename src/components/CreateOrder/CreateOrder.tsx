@@ -1,8 +1,9 @@
 'use client'
 
 import React from 'react'
-import { Button } from 'primereact/button'
+
 import { useRouter } from 'next/navigation'
+import Button from '@mui/material/Button'
 
 const CreateOrder = () => {
   const router = useRouter()
@@ -10,10 +11,7 @@ const CreateOrder = () => {
   return (
     <div>
       создание нового заказа
-      <Button
-        label={'back'}
-        onClick={() => router.push('/admin')}
-      />
+      <Button onClick={() => router.push('/admin')}> назад </Button>
     </div>
   )
 }

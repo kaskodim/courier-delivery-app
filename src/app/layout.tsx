@@ -1,13 +1,12 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
-import 'primereact/resources/themes/lara-light-indigo/theme.css'
-import 'primereact/resources/primereact.min.css'
-import 'primeicons/primeicons.css'
+
 import { Header } from '@components/Header/Header'
 
 export const metadata: Metadata = {
   title: 'Courier delivery app',
   description: 'Приложение для доставки посылок',
+  icons: '/',
 }
 
 export default function RootLayout({
