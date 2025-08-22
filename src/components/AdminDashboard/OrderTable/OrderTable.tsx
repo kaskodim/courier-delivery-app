@@ -1,64 +1,30 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import Paper from '@mui/material/Paper'
-import CircularProgress from '@mui/material/CircularProgress'
-import TablePagination from '@mui/material/TablePagination'
-import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
-import TextField from '@mui/material/TextField'
-import Chip from '@mui/material/Chip'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-
+import React, { useState } from 'react'
 import { Order, OrderStatus } from '@/types/orderTypes'
-import { useOrderData } from '@/hooks/useOrderData'
+import Paper from '@mui/material/Paper'
+import TableContainer from '@mui/material/TableContainer'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { Box, Chip } from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import DeleteConfirmationDialog from '@components/AdminDashboard/DeleteConfirmationDialog/DeleteConfirmationDialog'
-import { DataGrid } from '@mui/x-data-grid'
+import { useOrderData } from '@/hooks/useOrderData'
 
 type OrderTableProps = {
   orders: Order[]
   loading: boolean
 }
 
-export default function OrderTable({ orders, loading }: OrderTableProps) {
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null)
-
+const OrderTable = ({ orders, loading }: OrderTableProps) => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [deletionOrder, setDeletionOrder] = useState<{ id: string; number: string } | null>(null)
-
   const { deleteOrder } = useOrderData()
 
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteOrder(id)
-      console.log(`заказ ${id} удален`)
-    } catch (err) {
-      console.error('Ошибка при удалении заказа:', err)
-    } finally {
-      setOpenDialog(false)
-      setDeletionOrder(null)
-    }
-  }
-
-  const handleEdit = (id: string) => {
-    console.log('Редактировать заказ:', id)
-    // Логика редактирования
-  }
-
   const viewOrderHandler = (id: string) => {
-    console.log('клик по иконке:', id)
+    console.log('клик по иконке просмотра: ', id)
   }
 
   const getStatusColor = (status: OrderStatus) => {
@@ -76,192 +42,198 @@ export default function OrderTable({ orders, loading }: OrderTableProps) {
     }
   }
 
-  const sortedOrders = useMemo(() => {
-    const result = [...orders]
-    if (sortDirection) {
-      result.sort((a, b) => {
-        if (sortDirection === 'asc') {
-          return a.orderNumber.localeCompare(b.orderNumber)
-        } else {
-          return b.orderNumber.localeCompare(a.orderNumber)
-        }
-      })
+  const handleEdit = (id: string) => {
+    console.log('Редактировать заказ:', id)
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteOrder(id)
+      console.log(`заказ ${id} удален`)
+    } catch (err) {
+      console.error('Ошибка при удалении заказа:', err)
+    } finally {
+      setOpenDialog(false)
+      setDeletionOrder(null)
     }
-    return result
-  }, [orders, sortDirection])
-
-  const filteredOrders = useMemo(() => {
-    return sortedOrders.filter((order) => {
-      const term = searchTerm.toLowerCase()
-      return (
-        order.orderNumber.toLowerCase().includes(term) ||
-        order.sender.toLowerCase().includes(term) ||
-        order.recipient.toLowerCase().includes(term) ||
-        order.orderStatus.toLowerCase().includes(term) ||
-        order.comment?.toLowerCase().includes(term)
-      )
-    })
-  }, [sortedOrders, searchTerm])
-
-  const paginatedOrders = filteredOrders.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
   }
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
+  const columns: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'ID',
+      width: 50,
+      sortable: false,
+    },
+    {
+      field: 'viewOrder',
+      headerName: '',
+      minWidth: 60,
+      maxWidth: 60,
+      sortable: false,
+      renderCell: (params) => (
+        <IconButton
+          color="primary"
+          onClick={() => {
+            viewOrderHandler(params.row.id)
+          }}
+          size="small"
+          title={'Посмотреть заказ'}
+        >
+          <VisibilityIcon />
+        </IconButton>
+      ),
+    },
+    {
+      field: 'orderNumber',
+      headerName: 'Номер заказа',
+      sortable: true,
+      minWidth: 150,
+    },
+    {
+      field: 'orderType',
+      headerName: 'Тип заказа',
+      minWidth: 100,
+      sortable: false,
+    },
+    {
+      field: 'sender',
+      headerName: 'Отправитель',
+      minWidth: 150,
+      sortable: false,
+      flex: 1,
+    },
+    {
+      field: 'recipient',
+      headerName: 'Получатель',
+      minWidth: 150,
+      sortable: false,
+      flex: 1,
+    },
+    {
+      field: 'orderStatus',
+      headerName: 'Статус',
+      minWidth: 120,
+      renderCell: (params) => (
+        <Chip
+          label={params.value}
+          size="small"
+          color={getStatusColor(params.value)}
+          variant="outlined"
+        />
+      ),
+    },
+    {
+      field: 'comment',
+      headerName: 'Комментарий',
+      minWidth: 200,
+      sortable: false,
+      valueGetter: (value) => value || '—',
+    },
+    {
+      field: 'accepted',
+      headerName: 'Принят',
+      minWidth: 100,
+      sortable: true,
+      renderCell: (params) => (params.value ? 'Да' : 'Нет'),
+    },
+    {
+      field: 'courierId',
+      headerName: 'courierId',
+      minWidth: 100,
+      sortable: false,
+    },
+    {
+      field: 'userId',
+      headerName: 'userId',
+      minWidth: 100,
+      sortable: false,
+    },
+    {
+      field: 'actions',
+      headerName: 'Действия',
+      minWidth: 100,
+      sortable: false,
+      align: 'center',
+      headerAlign: 'center',
+      renderCell: (params: GridRenderCellParams) => (
+        <div>
+          <IconButton color="primary" size={'small'} onClick={() => handleEdit(params.row.id)}>
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            color="error"
+            size={'small'}
+            onClick={() => {
+              setDeletionOrder({ id: params.row.id, number: params.row.orderNumber })
+              setOpenDialog(true)
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      ),
+    },
+  ]
 
-  const handleSort = () => {
-    setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))
-  }
+  const rows = orders.map((order) => ({
+    ...order,
+  }))
 
   return (
-    <>
-      <TableContainer component={Paper}>
-        <div className={'p-2'}>
-          <TextField
-            placeholder="Поиск по номеру, отправителю, получателю, статусу..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            fullWidth
-            variant="outlined"
-            size="small"
-          />
-        </div>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <TableContainer component={Paper} sx={{ flex: 1, maxHeight: '100%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          loading={loading}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 15,
+              },
+            },
+          }}
+          pageSizeOptions={[10, 15, 20]}
+          disableRowSelectionOnClick
+          sx={{
+            height: '100%',
+            width: '100%',
+            boxSizing: 'border-box',
 
-        <div className={'flex items-center justify-between'}>
-          <div className={'pl-4'}>Заказов всего: {orders.length}</div>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={filteredOrders.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage="Строк на странице:"
-          />
-        </div>
+
+            '& .MuiDataGrid-columnHeader:focus': {
+              outline: 'none !important',
+            },
 
 
 
-        <Table size={'small'}>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: '#e6f3ff' }}>
-              <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}></TableCell>
-              <TableCell sx={{ fontWeight: 'bold', cursor: 'pointer' }} onClick={handleSort}>
-                Номер заказа
-                {sortDirection === 'asc' && <ArrowDropUpIcon fontSize="small" color="primary" />}
-                {sortDirection === 'desc' && <ArrowDropDownIcon fontSize="small" color="primary" />}
-                {!sortDirection && <ArrowDropUpIcon fontSize="small" sx={{ color: '#888' }} />}{' '}
-                {/* CHANGE: Added default gray arrow */}
-              </TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Тип</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Отправитель</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Получатель</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Статус заказа</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Комментарий к заказу</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Принят курьером</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Courier ID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>User ID</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Действия</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={11} align="center">
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
-            ) : filteredOrders.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={11} align="center">
-                  Нет доступных заказов
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedOrders.map((order) => (
-                <TableRow key={order.id} sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }}>
-                  <TableCell>{order.id}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      color="default"
-                      onClick={() => {
-                        viewOrderHandler(order.id)
-                      }}
-                      size="small"
-                    >
-                      <VisibilityIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>{order.orderNumber}</TableCell>
-                  <TableCell>{order.orderType}</TableCell>
-                  <TableCell>{order.sender}</TableCell>
-                  <TableCell>{order.recipient}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={order.orderStatus}
-                      color={getStatusColor(order.orderStatus)}
-                      variant="outlined"
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell>{order.comment}</TableCell>
-                  <TableCell>{order.accepted ? 'Да' : 'Нет'}</TableCell>
-                  <TableCell
-                    sx={{
-                      maxWidth: 50,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                    title={order.courierId ? order.courierId : ''}
-                  >
-                    {order.courierId || 'N/A'}
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      maxWidth: 50,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                    title={order.userId ? order.userId : ''}
-                  >
-                    {order.userId || 'N/A'}
-                  </TableCell>
-                  <TableCell>
-                    <IconButton color="primary" onClick={() => handleEdit(order.id)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      color="error"
-                      onClick={() => {
-                        setDeletionOrder({ id: order.id, number: order.orderNumber })
-                        setOpenDialog(true)
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+            '& .MuiDataGrid-columnHeaderTitle': {
+              fontWeight: 'bold',
+            },
+            '& .MuiDataGrid-cell:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.04)',
+            },
+            '& .MuiDataGrid-cell:focus': {
+              outline: 'none',
+            },
+            '& .MuiToolbar-root': {
+              backgroundColor: '#dbebf6',
+            },
+          }}
+          disableColumnMenu
+          density="compact"
+          columnHeaderHeight={70}
+        />
       </TableContainer>
-
       <DeleteConfirmationDialog
         open={openDialog}
         setOpen={setOpenDialog}
         deletionOrder={deletionOrder}
         handleDelete={handleDelete}
       />
-    </>
+    </Box>
   )
 }
+
+export default OrderTable

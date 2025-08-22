@@ -9,16 +9,14 @@ export default function AdminDashboard() {
   const { orders, loading } = useOrderData()
 
   return (
-    <div className="flex flex-col gap-4 p-4 flex-1"> {/* CHANGE: Added flex-1 to make the entire dashboard fill the main */}
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col h-[calc(100vh-60px-32px)] overflow-hidden">
+      <div className="flex justify-between p-4">
         <h2 className="text-xl font-bold">Управление заказами</h2>
         <GroupButtons />
       </div>
-
-      <OrderTable
-        orders={orders}
-        loading={loading}
-      />
+      <div className="flex-1 overflow-hidden">
+        <OrderTable orders={orders} loading={loading} />
+      </div>
     </div>
   )
 }
