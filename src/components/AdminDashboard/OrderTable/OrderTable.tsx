@@ -100,8 +100,9 @@ const OrderTable = ({ orders, loading }: OrderTableProps) => {
       field: 'sender',
       headerName: 'Отправитель',
       minWidth: 150,
-      sortable: false,
       flex: 1,
+      sortable: false,
+
     },
     {
       field: 'recipient',
@@ -143,6 +144,9 @@ const OrderTable = ({ orders, loading }: OrderTableProps) => {
       minWidth: 100,
       sortable: false,
     },
+    // {
+    //   вметоо курьерID должнол быть имя и фамилия
+    // },
     {
       field: 'userId',
       headerName: 'userId',
@@ -201,11 +205,9 @@ const OrderTable = ({ orders, loading }: OrderTableProps) => {
             width: '100%',
             boxSizing: 'border-box',
 
-
-            '& .MuiDataGrid-columnHeader:focus': {
-              outline: 'none !important',
+            '& .MuiDataGrid-columnHeader': {
+              backgroundColor: '#94b7d0',
             },
-
 
 
             '& .MuiDataGrid-columnHeaderTitle': {
@@ -218,12 +220,13 @@ const OrderTable = ({ orders, loading }: OrderTableProps) => {
               outline: 'none',
             },
             '& .MuiToolbar-root': {
-              backgroundColor: '#dbebf6',
+              backgroundColor: '#D8E9F4FF',
             },
           }}
           disableColumnMenu
           density="compact"
           columnHeaderHeight={70}
+          disableColumnResize={true}
         />
       </TableContainer>
       <DeleteConfirmationDialog
