@@ -1,21 +1,32 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Order, OrderStatus } from '@/types/orderTypes'
+import { Order } from '@/types/orderTypes'
 import Paper from '@mui/material/Paper'
 import TableContainer from '@mui/material/TableContainer'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { Box, Chip } from '@mui/material'
-import IconButton from '@mui/material/IconButton'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { DataGrid } from '@mui/x-data-grid'
+import { Box } from '@mui/material'
 import DeleteConfirmationDialog from '@components/AdminDashboard/DeleteConfirmationDialog/DeleteConfirmationDialog'
 import { useOrderData } from '@/hooks/useOrderData'
+import { getOrderTableColumns } from '@components/AdminDashboard/OrderTable/getOrderTableColumns'
+import {
+  boxStyles,
+  orderTableStyles,
+  tableContainerStyles,
+} from '@components/AdminDashboard/OrderTable/orderTableStyles'
+import { COLUMN_HEADER_HEIGHT, PAGE_SIZE_OPTIONS } from '@/consnants'
+import { GridInitialState } from '@mui/x-data-grid'
 
 type OrderTableProps = {
   orders: Order[]
   loading: boolean
+}
+const dataGridInitialState: GridInitialState = {
+  pagination: {
+    paginationModel: {
+      pageSize: PAGE_SIZE_OPTIONS[0],
+    },
+  },
 }
 
 const OrderTable = ({ orders, loading }: OrderTableProps) => {
@@ -23,30 +34,13 @@ const OrderTable = ({ orders, loading }: OrderTableProps) => {
   const [deletionOrder, setDeletionOrder] = useState<{ id: string; number: string } | null>(null)
   const { deleteOrder } = useOrderData()
 
-  const viewOrderHandler = (id: string) => {
-    console.log('клик по иконке просмотра: ', id)
+  const handleViewOrder = (id: string) => {
+    console.log('клик по иконке просмотра заказа: ', id)
   }
-
-  const getStatusColor = (status: OrderStatus) => {
-    switch (status.toLowerCase()) {
-      case OrderStatus.delivered:
-        return 'success'
-      case OrderStatus.accepted:
-        return 'primary'
-      case OrderStatus.ready:
-        return 'info'
-      case OrderStatus.notReady:
-        return 'warning'
-      default:
-        return 'default'
-    }
-  }
-
-  const handleEdit = (id: string) => {
+  const handleEditOrder = (id: string) => {
     console.log('Редактировать заказ:', id)
   }
-
-  const handleDelete = async (id: string) => {
+  const handleDeleteOrder = async (id: string) => {
     try {
       await deleteOrder(id)
       console.log(`заказ ${id} удален`)
@@ -58,182 +52,35 @@ const OrderTable = ({ orders, loading }: OrderTableProps) => {
     }
   }
 
-  const columns: GridColDef[] = [
-    {
-      field: 'id',
-      headerName: 'ID',
-      width: 50,
-      sortable: false,
-    },
-    {
-      field: 'viewOrder',
-      headerName: '',
-      minWidth: 60,
-      maxWidth: 60,
-      sortable: false,
-      renderCell: (params) => (
-        <IconButton
-          color="primary"
-          onClick={() => {
-            viewOrderHandler(params.row.id)
-          }}
-          size="small"
-          title={'Посмотреть заказ'}
-        >
-          <VisibilityIcon />
-        </IconButton>
-      ),
-    },
-    {
-      field: 'orderNumber',
-      headerName: 'Номер заказа',
-      sortable: true,
-      minWidth: 150,
-    },
-    {
-      field: 'orderType',
-      headerName: 'Тип заказа',
-      minWidth: 100,
-      sortable: false,
-    },
-    {
-      field: 'sender',
-      headerName: 'Отправитель',
-      minWidth: 150,
-      flex: 1,
-      sortable: false,
-
-    },
-    {
-      field: 'recipient',
-      headerName: 'Получатель',
-      minWidth: 150,
-      sortable: false,
-      flex: 1,
-    },
-    {
-      field: 'orderStatus',
-      headerName: 'Статус',
-      minWidth: 120,
-      renderCell: (params) => (
-        <Chip
-          label={params.value}
-          size="small"
-          color={getStatusColor(params.value)}
-          variant="outlined"
-        />
-      ),
-    },
-    {
-      field: 'comment',
-      headerName: 'Комментарий',
-      minWidth: 200,
-      sortable: false,
-      valueGetter: (value) => value || '—',
-    },
-    {
-      field: 'accepted',
-      headerName: 'Принят',
-      minWidth: 100,
-      sortable: true,
-      renderCell: (params) => (params.value ? 'Да' : 'Нет'),
-    },
-    {
-      field: 'courierId',
-      headerName: 'courierId',
-      minWidth: 100,
-      sortable: false,
-    },
-    // {
-    //   вметоо курьерID должнол быть имя и фамилия
-    // },
-    {
-      field: 'userId',
-      headerName: 'userId',
-      minWidth: 100,
-      sortable: false,
-    },
-    {
-      field: 'actions',
-      headerName: 'Действия',
-      minWidth: 100,
-      sortable: false,
-      align: 'center',
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams) => (
-        <div>
-          <IconButton color="primary" size={'small'} onClick={() => handleEdit(params.row.id)}>
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            color="error"
-            size={'small'}
-            onClick={() => {
-              setDeletionOrder({ id: params.row.id, number: params.row.orderNumber })
-              setOpenDialog(true)
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </div>
-      ),
-    },
-  ]
-
-  const rows = orders.map((order) => ({
-    ...order,
-  }))
+  const columns = getOrderTableColumns(
+    handleViewOrder,
+    handleEditOrder,
+    setDeletionOrder,
+    setOpenDialog,
+  )
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TableContainer component={Paper} sx={{ flex: 1, maxHeight: '100%' }}>
+    <Box sx={boxStyles}>
+      <TableContainer component={Paper} sx={tableContainerStyles}>
         <DataGrid
-          rows={rows}
+          rows={orders}
           columns={columns}
           loading={loading}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 15,
-              },
-            },
-          }}
-          pageSizeOptions={[10, 15, 20]}
+          initialState={dataGridInitialState}
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
           disableRowSelectionOnClick
-          sx={{
-            height: '100%',
-            width: '100%',
-            boxSizing: 'border-box',
-
-            '& .MuiDataGrid-columnHeader': {
-              backgroundColor: '#94b7d0',
-            },
-
-
-            '& .MuiDataGrid-columnHeaderTitle': {
-              fontWeight: 'bold',
-            },
-            '& .MuiDataGrid-cell:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.04)',
-            },
-            '& .MuiDataGrid-cell:focus': {
-              outline: 'none',
-            },
-            '& .MuiToolbar-root': {
-              backgroundColor: '#D8E9F4FF',
-            },
-          }}
+          sx={orderTableStyles}
           disableColumnMenu
           density="compact"
-          columnHeaderHeight={70}
-          disableColumnResize={true}
+          columnHeaderHeight={COLUMN_HEADER_HEIGHT}
+          localeText={{ noRowsLabel: 'Заказы не найдены' }}
         />
       </TableContainer>
       <DeleteConfirmationDialog
         open={openDialog}
         setOpen={setOpenDialog}
         deletionOrder={deletionOrder}
-        handleDelete={handleDelete}
+        handleDelete={handleDeleteOrder}
       />
     </Box>
   )

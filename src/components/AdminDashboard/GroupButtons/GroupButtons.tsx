@@ -19,7 +19,6 @@ export default function GroupButtons() {
         accepted: false,
         userId: '', // Заполнится автоматически если есть RLS политика
         courierId: null,
-
       }
       await addOrder(testOrder)
       console.log('тест заказ создан')
@@ -31,11 +30,12 @@ export default function GroupButtons() {
 
   return (
     <div className={'flex gap-2'}>
-      <Button variant="contained"  size="small">
+      <Button variant="contained" size="small">
         создать заказ
       </Button>
-      <Button variant="contained" size="small" onClick={handleTestAddOrder}>создать тестовый заказ</Button>
-      <Button variant="contained" size="small">обновить таблицу</Button>
+      <Button variant="contained" size="small" onClick={handleTestAddOrder}>
+        создать тестовый заказ
+      </Button>
     </div>
   )
 }

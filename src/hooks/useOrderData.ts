@@ -39,11 +39,12 @@ export const useOrderData = () => {
         },
       })
       channel
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (_payload) => {
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
           fetchOrders()
         })
-        .subscribe((status) => {
+        .subscribe((status, err) => {
           if (status === 'CHANNEL_ERROR') {
+            console.log({ myErr: err })
             console.error('Ошибка подписки:', 'Проверьте RLS, сеть или авторизацию')
           }
         })
