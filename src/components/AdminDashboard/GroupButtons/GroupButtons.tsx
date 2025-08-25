@@ -8,7 +8,7 @@ type GroupButtonsProps = {
 }
 
 export default function GroupButtons({ addOrderAction }: GroupButtonsProps) {
-  const handleTestAddOrder = async () => {
+  const handleTestAddOrder = () => {
     try {
       // Тестовые данные заказа
       const testOrder = {
@@ -21,7 +21,7 @@ export default function GroupButtons({ addOrderAction }: GroupButtonsProps) {
         userId: '',
         courierId: null,
       }
-      await addOrderAction(testOrder)
+      addOrderAction(testOrder)
       console.log('тест заказ создан')
     } catch (error) {
       console.error('Ошибка создания тестового заказа:', error)

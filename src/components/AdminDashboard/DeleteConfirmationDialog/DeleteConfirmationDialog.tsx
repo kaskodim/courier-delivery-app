@@ -35,7 +35,8 @@ const DeleteConfirmationDialog = ({
         <DialogTitle>Подтверждение удаления</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Вы уверены, что хотите удалить заказ <strong>{deletionOrder?.number}</strong>?
+            Вы уверены, что хотите удалить заказ{' '}
+            <strong>{deletionOrder?.number}</strong>?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

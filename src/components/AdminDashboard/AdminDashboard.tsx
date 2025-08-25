@@ -9,7 +9,7 @@ import OrderSearch from '@components/OrderSearch/OrderSearch'
 export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState<string>('')
 
-  const { orders, loading, deleteOrder, addOrder} = useOrderData()
+  const { orders, loading, deleteOrder, addOrder } = useOrderData()
 
   const filteredOrders = React.useMemo(
     () =>

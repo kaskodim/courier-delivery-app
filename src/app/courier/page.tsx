@@ -1,11 +1,7 @@
 import React from 'react'
 
 const Page = () => {
-  return (
-    <div>
-      здесь будет страница курьера
-    </div>
-  )
+  return <div>Здесь будет страница для курьера</div>
 }
 
 export default Page

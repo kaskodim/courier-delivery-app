@@ -11,13 +11,6 @@ export type Order = {
   courierId: string | null
 }
 
-export type Address = {
-  id: string
-  city: string
-  street: string
-  houseNumber: string
-}
-
 export enum OrderCategory {
   FOOD = 'Еда',
   DOCS = 'Документы',

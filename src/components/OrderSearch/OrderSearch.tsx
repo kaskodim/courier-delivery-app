@@ -1,7 +1,6 @@
-
 import React, { useMemo } from 'react'
-import { Order, OrderStatus } from '@/types/orderTypes'
-import { Box, Button, MenuItem, Paper, Select, TextField } from '@mui/material'
+import { Order } from '@/types/orderTypes'
+import { Box, Button, Paper, TextField } from '@mui/material'
 
 type OrderSearchProps = {
   orders: Order[]
@@ -16,10 +15,16 @@ const messages = {
   resetButton: 'Сбросить',
 }
 
-export default function OrderSearch({ orders, searchQuery, setSearchQuery }: OrderSearchProps) {
+export default function OrderSearch({
+  orders,
+  searchQuery,
+  setSearchQuery,
+}: OrderSearchProps) {
   const filteredOrders = useMemo(
     () =>
-      orders.filter((order) => order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase())),
+      orders.filter((order) =>
+        order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
     [orders, searchQuery],
   )
 

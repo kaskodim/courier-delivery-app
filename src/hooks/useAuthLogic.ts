@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FormEvent } from 'react'
 import { supabase } from '@/lib/supabase/supabase-client'
 import { useRouter } from 'next/navigation'
 import { MIN_PASSWORD_LENGTH } from '@/consnants'
@@ -16,7 +16,7 @@ export function useAuthLogic() {
   const [isEmailConfirmed, setIsEmailConfirmed] = useState<boolean>(false) // подтвержден ли email
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
     setSuccess(null)
@@ -39,7 +39,10 @@ export function useAuthLogic() {
     }
 
     if (isSignIn) {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
       if (error) {
         if (error.message.includes('Invalid login credentials')) {
           setError('Неверный email или пароль')
@@ -50,10 +53,16 @@ export function useAuthLogic() {
       }
       router.push('/')
     } else {
-      const { error } = await supabase.auth.signUp({ email, password, options: { data: { name } } })
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { name } },
+      })
       if (error) {
         if (error.message.includes('User already registered')) {
-          setError('Этот email уже зарегистрирован. Войдите или используйте другой email')
+          setError(
+            'Этот email уже зарегистрирован. Войдите или используйте другой email',
+          )
         } else if (error.message.includes('Invalid format')) {
           setError('Некорректный формат email или пароля')
         } else {
