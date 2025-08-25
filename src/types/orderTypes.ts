@@ -4,17 +4,11 @@ export type Order = {
   orderType: OrderCategory
   sender: string
   recipient: string
-  statusOrder: OrderStatus
+  orderStatus: OrderStatus
   comment: string
-  skipOrder: boolean
   accepted: boolean
-}
-
-export type Address = {
-  id: string
-  city: string
-  street: string
-  houseNumber: string
+  userId: string | null
+  courierId: string | null
 }
 
 export enum OrderCategory {

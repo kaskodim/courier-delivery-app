@@ -73,16 +73,8 @@ export function AuthForm({
   setIsSignIn,
 }: Props) {
   return (
-    <form
-      className={styles.form}
-      onSubmit={handleSubmit}
-    >
-      {!isSignIn && (
-        <NameField
-          name={name}
-          setName={setName}
-        />
-      )}
+    <form className={styles.form} onSubmit={handleSubmit}>
+      {!isSignIn && <NameField name={name} setName={setName} />}
 
       <div className={styles.field}>
         <label className={styles.label}>Email:</label>
@@ -115,10 +107,7 @@ export function AuthForm({
 
       {error && <p className={styles.error}>{error}</p>}
 
-      <button
-        className={styles.button}
-        type="submit"
-      >
+      <button className={styles.button} type="submit">
         {isSignIn ? 'Войти' : 'Зарегистрироваться'}
       </button>
 
