@@ -31,7 +31,6 @@ const DeleteConfirmationDialog = ({
         }}
         open={open}
       />
-
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Подтверждение удаления</DialogTitle>
         <DialogContent>

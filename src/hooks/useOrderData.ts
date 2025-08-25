@@ -19,44 +19,13 @@ export const useOrderData = () => {
     setLoading(false)
   }
 
+  // TODO реализовать подписку на изменение в БД от Supabase
   useEffect(() => {
     fetchOrders()
-
-    const setupSubscription = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-
-      if (!session || !session.access_token) {
-        console.error('Нет активной сессии или токена авторизации')
-        return
-      }
-
-      const channel = supabase.channel('custom-orders-channel-' + Date.now(), {
-        config: {
-          broadcast: { ack: true },
-          presence: { key: session.access_token },
-        },
-      })
-      channel
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
-          fetchOrders()
-        })
-        .subscribe((status, err) => {
-          if (status === 'CHANNEL_ERROR') {
-            console.log({ myErr: err })
-            console.error('Ошибка подписки:', 'Проверьте RLS, сеть или авторизацию')
-          }
-        })
-      return () => {
-        channel.unsubscribe()
-      }
-    }
-
-    setupSubscription().catch((err) => console.error('Ошибка настройки подписки:', err))
   }, [])
 
   const addOrder = async (newOrder: Omit<Order, 'id' | 'orderNumber'>) => {
+    setLoading(true)
     // 'id' и 'orderNumber' создаются автоматически на Supabase
     const {
       data: { user },
@@ -67,29 +36,26 @@ export const useOrderData = () => {
       ...newOrder,
       userId: user.id,
     }
-
-    const { data, error } = await supabase.from('orders').insert(orderWithUser).select()
+    const { data, error } = await supabase
+      .from('orders')
+      .insert(orderWithUser)
+      .select()
     if (error) throw error
 
     setOrders((prev) => [...prev, data[0]])
-    return data[0]
+    setLoading(false)
   }
 
   const deleteOrder = async (id: string) => {
+    setLoading(true)
     const { error } = await supabase.from('orders').delete().eq('id', id)
-    if (error) console.error('Ошибка при удалении заказа:', error.message)
-    else setOrders((prev) => prev.filter((order) => order.id !== id))
+    if (error) {
+      console.error(`Ошибка при удалении заказа ${id}:', ${error.message}`)
+    } else {
+      setOrders((prev) => prev.filter((order) => order.id !== id))
+    }
+    setLoading(false)
   }
 
-  const updateOrder = async (id: string, updatedFields: Partial<Order>) => {
-    const { data, error } = await supabase
-      .from('orders')
-      .update(updatedFields)
-      .eq('id', id)
-      .select()
-    if (error) console.error('Ошибка при обновлении заказа:', error.message)
-    else setOrders((prev) => prev.map((order) => (order.id === id ? data[0] : order)))
-  }
-
-  return { orders, loading, addOrder, deleteOrder, updateOrder, setOrders }
+  return { orders, loading, addOrder, deleteOrder }
 }

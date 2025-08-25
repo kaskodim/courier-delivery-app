@@ -7,12 +7,15 @@ import OrderTable from '@components/AdminDashboard/OrderTable/OrderTable'
 import OrderSearch from '@components/OrderSearch/OrderSearch'
 
 export default function AdminDashboard() {
-  const { orders, loading } = useOrderData()
   const [searchQuery, setSearchQuery] = useState<string>('')
+
+  const { orders, loading, deleteOrder, addOrder} = useOrderData()
 
   const filteredOrders = React.useMemo(
     () =>
-      orders.filter((order) => order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase())),
+      orders.filter((order) =>
+        order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
     [orders, searchQuery],
   )
 
@@ -20,13 +23,21 @@ export default function AdminDashboard() {
     <div className="flex h-[calc(100vh-60px-32px)] flex-col gap-3 overflow-hidden">
       <div className="flex justify-between p-4">
         <h2 className="text-xl font-bold">Управление заказами</h2>
-        <GroupButtons />
+        <GroupButtons addOrderAction={addOrder} />
       </div>
 
-      <OrderSearch orders={orders} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <OrderSearch
+        orders={orders}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
       <div className="flex-1 overflow-hidden">
-        <OrderTable orders={filteredOrders} loading={loading} />
+        <OrderTable
+          orders={filteredOrders}
+          loading={loading}
+          deleteOrder={deleteOrder}
+        />
       </div>
     </div>
   )

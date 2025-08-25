@@ -1,12 +1,13 @@
 'use client'
 
-import { useOrderData } from '@/hooks/useOrderData'
-import { OrderCategory, OrderStatus } from '@/types/orderTypes'
+import { Order, OrderCategory, OrderStatus } from '@/types/orderTypes'
 import Button from '@mui/material/Button'
 
-export default function GroupButtons() {
-  const { addOrder } = useOrderData()
+type GroupButtonsProps = {
+  addOrderAction: (newOrder: Omit<Order, 'id' | 'orderNumber'>) => void
+}
 
+export default function GroupButtons({ addOrderAction }: GroupButtonsProps) {
   const handleTestAddOrder = async () => {
     try {
       // Тестовые данные заказа
@@ -17,10 +18,10 @@ export default function GroupButtons() {
         orderStatus: OrderStatus.notReady,
         comment: 'Тестовый заказ',
         accepted: false,
-        userId: '', // Заполнится автоматически если есть RLS политика
+        userId: '',
         courierId: null,
       }
-      await addOrder(testOrder)
+      await addOrderAction(testOrder)
       console.log('тест заказ создан')
     } catch (error) {
       console.error('Ошибка создания тестового заказа:', error)
@@ -30,7 +31,7 @@ export default function GroupButtons() {
 
   return (
     <div className={'flex gap-2'}>
-      <Button variant="contained" size="small">
+      <Button variant="contained" size="small" disabled>
         создать заказ
       </Button>
       <Button variant="contained" size="small" onClick={handleTestAddOrder}>

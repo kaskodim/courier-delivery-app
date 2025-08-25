@@ -30,6 +30,7 @@ export const getOrderTableColumns = (
           onClick={() => handleViewOrder(params.row.id)}
           size="small"
           title="Посмотреть заказ"
+          disabled
         >
           <VisibilityIcon />
         </IconButton>
@@ -109,14 +110,22 @@ export const getOrderTableColumns = (
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams) => (
         <div>
-          <IconButton color="primary" size="small" onClick={() => handleEditOrder(params.row.id)}>
+          <IconButton
+            color="primary"
+            size="small"
+            onClick={() => handleEditOrder(params.row.id)}
+            disabled
+          >
             <EditIcon />
           </IconButton>
           <IconButton
             color="error"
             size="small"
             onClick={() => {
-              setDeletionOrder({ id: params.row.id, number: params.row.orderNumber })
+              setDeletionOrder({
+                id: params.row.id,
+                number: params.row.orderNumber,
+              })
               setOpenDialog(true)
             }}
           >

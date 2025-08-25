@@ -1,7 +1,7 @@
-// components/AdminDashboard/OrderSearch/OrderSearch.tsx
+
 import React, { useMemo } from 'react'
-import { Order } from '@/types/orderTypes'
-import { Box, Button, Paper, TextField } from '@mui/material'
+import { Order, OrderStatus } from '@/types/orderTypes'
+import { Box, Button, MenuItem, Paper, Select, TextField } from '@mui/material'
 
 type OrderSearchProps = {
   orders: Order[]
@@ -42,6 +42,7 @@ export default function OrderSearch({ orders, searchQuery, setSearchQuery }: Ord
             onChange={(e) => setSearchQuery(e.target.value)}
             sx={{ width: '100%' }}
           />
+
           <Button variant="outlined" onClick={() => setSearchQuery('')}>
             {messages.resetButton}
           </Button>

@@ -4,10 +4,9 @@ import React, { useState } from 'react'
 import { Order } from '@/types/orderTypes'
 import Paper from '@mui/material/Paper'
 import TableContainer from '@mui/material/TableContainer'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridInitialState } from '@mui/x-data-grid'
 import { Box } from '@mui/material'
 import DeleteConfirmationDialog from '@components/AdminDashboard/DeleteConfirmationDialog/DeleteConfirmationDialog'
-import { useOrderData } from '@/hooks/useOrderData'
 import { getOrderTableColumns } from '@components/AdminDashboard/OrderTable/getOrderTableColumns'
 import {
   boxStyles,
@@ -15,11 +14,11 @@ import {
   tableContainerStyles,
 } from '@components/AdminDashboard/OrderTable/orderTableStyles'
 import { COLUMN_HEADER_HEIGHT, PAGE_SIZE_OPTIONS } from '@/consnants'
-import { GridInitialState } from '@mui/x-data-grid'
 
 type OrderTableProps = {
   orders: Order[]
   loading: boolean
+  deleteOrder: (id: string) => void
 }
 const dataGridInitialState: GridInitialState = {
   pagination: {
@@ -29,10 +28,12 @@ const dataGridInitialState: GridInitialState = {
   },
 }
 
-const OrderTable = ({ orders, loading }: OrderTableProps) => {
+const OrderTable = ({ loading, orders, deleteOrder }: OrderTableProps) => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const [deletionOrder, setDeletionOrder] = useState<{ id: string; number: string } | null>(null)
-  const { deleteOrder } = useOrderData()
+  const [deletionOrder, setDeletionOrder] = useState<{
+    id: string
+    number: string
+  } | null>(null)
 
   const handleViewOrder = (id: string) => {
     console.log('клик по иконке просмотра заказа: ', id)
@@ -40,16 +41,10 @@ const OrderTable = ({ orders, loading }: OrderTableProps) => {
   const handleEditOrder = (id: string) => {
     console.log('Редактировать заказ:', id)
   }
-  const handleDeleteOrder = async (id: string) => {
-    try {
-      await deleteOrder(id)
-      console.log(`заказ ${id} удален`)
-    } catch (err) {
-      console.error('Ошибка при удалении заказа:', err)
-    } finally {
-      setOpenDialog(false)
-      setDeletionOrder(null)
-    }
+  const handleDeleteOrder = (id: string) => {
+    setOpenDialog(false)
+    deleteOrder(id)
+    setDeletionOrder(null)
   }
 
   const columns = getOrderTableColumns(
